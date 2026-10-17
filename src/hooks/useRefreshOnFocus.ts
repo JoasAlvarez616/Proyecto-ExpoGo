@@ -1,11 +1,5 @@
-import { useCallback } from 'react';
-import { useFocusEffect } from 'expo-router';
-
-export function useRefreshOnFocus(refresh: () => void) {
-  useFocusEffect(
-    useCallback(() => {
-      refresh();
-    }, [refresh])
-  );
+// No-op: evita bucles de useFocusEffect.
+// El refresco se hace con pull-to-refresh en cada lista.
+export function useRefreshOnFocus(_refresh: () => void) {
+  // intencionalmente vacío
 }
-

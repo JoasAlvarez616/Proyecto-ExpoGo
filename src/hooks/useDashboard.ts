@@ -10,17 +10,13 @@ export function useDashboard() {
 
   const cargarMetricas = useCallback((isRefresh = false) => {
     try {
-      if (isRefresh) {
-        setRefreshing(true);
-      } else {
-        setLoading(true);
-      }
+      if (isRefresh) setRefreshing(true);
+      else setLoading(true);
       setError(null);
-
       const data = VentaService.getDashboardMetrics();
       setMetricas(data);
     } catch (err: any) {
-      console.error('Error al cargar métricas del dashboard:', err);
+      console.error('Error al cargar métricas:', err);
       setError(err?.message || 'Error al compilar métricas');
     } finally {
       setLoading(false);
@@ -32,12 +28,9 @@ export function useDashboard() {
     cargarMetricas();
   }, [cargarMetricas]);
 
-  return {
-    metricas,
-    loading,
-    refreshing,
-    error,
-    refresh: () => cargarMetricas(true),
-  };
-}
+  const refresh = useCallback(() => {
+    cargarMetricas(true);
+  }, [cargarMetricas]);
 
+  return { metricas, loading, refreshing, error, refresh };
+}

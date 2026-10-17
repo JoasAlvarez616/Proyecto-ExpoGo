@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import * as Haptics from 'expo-haptics';
 import { ClienteService } from '../services/ClienteService';
-import { Cliente, ClienteInput } from '../types';
+import { Cliente } from '../types';
 
 export function useClientes() {
   const [clientes, setClientes] = useState<Cliente[]>([]);
@@ -12,13 +12,9 @@ export function useClientes() {
 
   const cargarClientes = useCallback((isRefresh = false) => {
     try {
-      if (isRefresh) {
-        setRefreshing(true);
-      } else {
-        setLoading(true);
-      }
+      if (isRefresh) setRefreshing(true);
+      else setLoading(true);
       setError(null);
-
       const lista = ClienteService.getAll(busqueda);
       setClientes(lista);
     } catch (err: any) {
@@ -34,31 +30,9 @@ export function useClientes() {
     cargarClientes();
   }, [cargarClientes]);
 
-  const crearCliente = async (data: ClienteInput) => {
-    try {
-      await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-      const nuevo = ClienteService.create(data);
-      await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-      cargarClientes();
-      return { success: true, cliente: nuevo };
-    } catch (err: any) {
-      await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
-      return { success: false, message: err?.message || 'Error al registrar cliente' };
-    }
-  };
-
-  const actualizarCliente = async (id: number, data: Partial<ClienteInput>) => {
-    try {
-      await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-      const actualizado = ClienteService.update(id, data);
-      await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-      cargarClientes();
-      return { success: true, cliente: actualizado };
-    } catch (err: any) {
-      await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
-      return { success: false, message: err?.message || 'Error al actualizar cliente' };
-    }
-  };
+  const refresh = useCallback(() => {
+    cargarClientes(true);
+  }, [cargarClientes]);
 
   const eliminarCliente = async (id: number) => {
     try {
@@ -73,7 +47,7 @@ export function useClientes() {
       return resultado;
     } catch (err: any) {
       await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
-      return { success: false, message: err?.message || 'Error al eliminar cliente' };
+      return { success: false, message: err?.message || 'Error al eliminar' };
     }
   };
 
@@ -84,9 +58,7 @@ export function useClientes() {
     error,
     busqueda,
     setBusqueda,
-    refresh: () => cargarClientes(true),
-    crearCliente,
-    actualizarCliente,
+    refresh,
     eliminarCliente,
   };
 }

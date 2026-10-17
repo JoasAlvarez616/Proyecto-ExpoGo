@@ -13,13 +13,9 @@ export function useVentas() {
 
   const cargarVentas = useCallback((isRefresh = false) => {
     try {
-      if (isRefresh) {
-        setRefreshing(true);
-      } else {
-        setLoading(true);
-      }
+      if (isRefresh) setRefreshing(true);
+      else setLoading(true);
       setError(null);
-
       const lista = VentaService.getAll({
         estado: filtroEstado === 'todas' ? undefined : filtroEstado,
         search: busqueda,
@@ -38,6 +34,10 @@ export function useVentas() {
     cargarVentas();
   }, [cargarVentas]);
 
+  const refresh = useCallback(() => {
+    cargarVentas(true);
+  }, [cargarVentas]);
+
   const anularVenta = async (id: number, motivo?: string) => {
     try {
       await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
@@ -47,7 +47,7 @@ export function useVentas() {
       return { success: true };
     } catch (err: any) {
       await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
-      return { success: false, message: err?.message || 'No se pudo anular la venta' };
+      return { success: false, message: err?.message || 'No se pudo anular' };
     }
   };
 
@@ -60,7 +60,7 @@ export function useVentas() {
       return { success: true };
     } catch (err: any) {
       await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
-      return { success: false, message: err?.message || 'No se pudo actualizar el pago' };
+      return { success: false, message: err?.message || 'No se pudo actualizar' };
     }
   };
 
@@ -73,9 +73,8 @@ export function useVentas() {
     setFiltroEstado,
     busqueda,
     setBusqueda,
-    refresh: () => cargarVentas(true),
+    refresh,
     anularVenta,
     pagarVenta,
   };
 }
-

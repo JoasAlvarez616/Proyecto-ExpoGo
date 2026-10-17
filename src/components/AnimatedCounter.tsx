@@ -28,16 +28,16 @@ export const AnimatedCounter: React.FC<AnimatedCounterProps> = ({
 }) => {
   const { colors } = useTheme();
   const scale = useSharedValue(1);
+  // ⚠️ Inicia en 1 y NUNCA baja a 0 → el texto siempre es visible
   const opacity = useSharedValue(1);
 
   useEffect(() => {
-    // Microanimación de pulso cuando cambia el valor
     scale.value = withSequence(
-      withTiming(1.12, { duration: 120 }),
+      withTiming(1.08, { duration: 120 }),
       withSpring(1, { damping: 12, stiffness: 200 })
     );
     opacity.value = withSequence(
-      withTiming(0.7, { duration: 80 }),
+      withTiming(0.85, { duration: 80 }),
       withTiming(1, { duration: 150 })
     );
   }, [value]);
@@ -47,7 +47,8 @@ export const AnimatedCounter: React.FC<AnimatedCounterProps> = ({
     opacity: opacity.value,
   }));
 
-  const formattedText = isCurrency ? formatCurrency(value) : formatNumber(value);
+  const safeValue = Number.isFinite(value) ? value : 0;
+  const formattedText = isCurrency ? formatCurrency(safeValue) : formatNumber(safeValue);
 
   return (
     <Animated.View style={animatedStyle}>
@@ -65,4 +66,3 @@ const styles = StyleSheet.create({
     ...Typography.title1,
   },
 });
-

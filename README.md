@@ -228,8 +228,12 @@ Al ejecutarse por primera vez, el sistema siembra automáticamente (*seeds*):
 
 ---
 
-## 🛡️ Estándares de Calidad Implementados
-- **ISO/IEC 25010:** Eficiencia en uso de memoria, facilidad de mantenimiento y fiabilidad funcional offline.
-- **SOLID:** Separación clara entre presentación (`app/`), servicios de dominio (`src/services/`), persistencia (`src/db/`) y validación (`src/schemas/`).
-- **Clean Code:** Funciones atómicas con complejidad ciclomática controlada, nombres expresivos y tipado TypeScript estricto sin `any`.
+## 🛡️ Buenas Prácticas Aplicadas
+- **Separación de responsabilidades:** presentación (`app/`), servicios de dominio (`src/services/`), persistencia (`src/db/`) y validación (`src/schemas/`) viven en capas independientes.
+- **Validación de datos:** ningún dato inválido entra al sistema gracias a Zod + React Hook Form.
+- **Integridad transaccional:** las operaciones críticas (emitir/anular factura) se ejecutan dentro de transacciones atómicas de SQLite.
+- **Trazabilidad:** toda operación destructiva queda registrada en `AuditLog` con usuario y motivo.
+- **Código limpio y tipado:** TypeScript estricto, funciones atómicas, sin `any` explícitos.
+- **Funcionamiento offline:** la app opera sin internet ni servicios externos.
+- **IVA del 19%** aplicado conforme a la normativa colombiana vigente.
 

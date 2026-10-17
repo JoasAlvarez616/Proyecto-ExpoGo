@@ -17,6 +17,7 @@ import { Ionicons } from '@expo/vector-icons';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { ProductoSchema, ProductoFormData } from '../../src/schemas/productoSchema';
 import { ProductoService } from '../../src/services/ProductoService';
+import { useRefreshStore } from '../../src/store/refreshStore';
 import { CategoriaService } from '../../src/services/CategoriaService';
 import { useTheme } from '../../src/hooks/useTheme';
 import { Header } from '../../src/components/Header';
@@ -92,6 +93,8 @@ export default function NuevoProductoScreen() {
       } else {
         ProductoService.create(data);
       }
+      useRefreshStore.getState().bumpProducts();
+      useRefreshStore.getState().bumpDashboard();
       setSuccessModalVisible(true);
     } catch (err: any) {
       console.error('Error al guardar producto:', err);

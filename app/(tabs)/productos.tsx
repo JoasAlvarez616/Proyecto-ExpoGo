@@ -12,7 +12,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useProductos } from '../../src/hooks/useProductos';
 import { useTheme } from '../../src/hooks/useTheme';
-import { useRefreshOnFocus } from '../../src/hooks/useRefreshOnFocus';
 import { Header } from '../../src/components/Header';
 import { SearchBar } from '../../src/components/SearchBar';
 import { CategoryChip } from '../../src/components/CategoryChip';
@@ -44,7 +43,7 @@ export default function ProductosScreen() {
     eliminarProducto,
   } = useProductos();
 
-  useRefreshOnFocus(refresh);
+
 
   const [productoAEliminar, setProductoAEliminar] = useState<Producto | null>(null);
   const [modalVisible, setModalVisible] = useState(false);

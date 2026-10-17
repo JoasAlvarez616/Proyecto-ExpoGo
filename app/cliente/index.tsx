@@ -12,7 +12,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useClientes } from '../../src/hooks/useClientes';
-import { useTheme } from '../../src/hooks/useTheme';
+import { useTheme } from '../../src/hooks/useTheme'
 import { Header } from '../../src/components/Header';
 import { SearchBar } from '../../src/components/SearchBar';
 import { GlassCard } from '../../src/components/GlassCard';
@@ -92,7 +92,7 @@ export default function ClientesScreen() {
             />
           }
           renderItem={({ item, index }) => (
-            <Animated.View entering={FadeInDown.delay(index * 40).springify()}>
+            <Animated.View entering={FadeInDown.delay(Math.min(index * 45, 320)).springify()}>
               <GlassCard style={styles.clientCard}>
                 <View style={styles.clientCardTop}>
                   <View style={styles.avatarCircle}>
