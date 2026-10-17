@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import Animated, { FadeInDown } from 'react-native-reanimated';
+import Animated, { FadeIn } from 'react-native-reanimated';
 import { useProductos } from '../../src/hooks/useProductos';
 import { useTheme } from '../../src/hooks/useTheme';
 import { Header } from '../../src/components/Header';
@@ -143,7 +143,7 @@ export default function ProductosScreen() {
               />
             }
             renderItem={({ item, index }) => (
-              <Animated.View entering={FadeInDown.delay(Math.min(index * 45, 320)).springify()}>
+              <Animated.View entering={FadeIn.duration(200)}>
                 <SwipeableRow
                   onDelete={() => confirmarEliminacion(item)}
                   deleteLabel="Desactivar"

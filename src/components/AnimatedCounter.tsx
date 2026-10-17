@@ -28,23 +28,18 @@ export const AnimatedCounter: React.FC<AnimatedCounterProps> = ({
 }) => {
   const { colors } = useTheme();
   const scale = useSharedValue(1);
-  // ⚠️ Inicia en 1 y NUNCA baja a 0 → el texto siempre es visible
-  const opacity = useSharedValue(1);
 
+  // ⚠️ Solo animamos `scale`. La opacidad queda fija en 1 → el número
+  // SIEMPRE es visible, incluso si la animación se interrumpe.
   useEffect(() => {
     scale.value = withSequence(
       withTiming(1.08, { duration: 120 }),
       withSpring(1, { damping: 12, stiffness: 200 })
     );
-    opacity.value = withSequence(
-      withTiming(0.85, { duration: 80 }),
-      withTiming(1, { duration: 150 })
-    );
   }, [value]);
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],
-    opacity: opacity.value,
   }));
 
   const safeValue = Number.isFinite(value) ? value : 0;

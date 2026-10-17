@@ -16,7 +16,6 @@ import { Ionicons } from '@expo/vector-icons';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { ClienteSchema, ClienteFormData } from '../../src/schemas/clienteSchema';
 import { ClienteService } from '../../src/services/ClienteService';
-import { useRefreshStore } from '../../src/store/refreshStore';
 import { useTheme } from '../../src/hooks/useTheme';
 import { Header } from '../../src/components/Header';
 import { GlassCard } from '../../src/components/GlassCard';
@@ -68,8 +67,7 @@ export default function NuevoClienteScreen() {
       } else {
         ClienteService.create(data);
       }
-      useRefreshStore.getState().bumpClients();
-      useRefreshStore.getState().bumpDashboard();
+      
       setSuccessModalVisible(true);
     } catch (err: any) {
       console.error('Error al guardar cliente:', err);

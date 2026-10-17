@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import Animated, { FadeInDown } from 'react-native-reanimated';
+import Animated, { FadeIn } from 'react-native-reanimated';
 import { Ionicons } from '@expo/vector-icons';
 import { useVentas } from '../../src/hooks/useVentas';
 import { useTheme } from '../../src/hooks/useTheme';
@@ -107,7 +107,7 @@ export default function VentasScreen() {
               />
             }
             renderItem={({ item, index }) => (
-              <Animated.View entering={FadeInDown.delay(Math.min(index * 45, 320)).springify()}>
+              <Animated.View entering={FadeIn.duration(200)}>
                 <SaleCard
                   venta={item}
                   onPress={() => router.push(`/venta/${item.id}`)}

@@ -10,7 +10,6 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { ProductoService } from '../../src/services/ProductoService';
-import { useRefreshStore } from '../../src/store/refreshStore';
 import { AuditService } from '../../src/services/AuditService';
 import { useTheme } from '../../src/hooks/useTheme';
 import { Header } from '../../src/components/Header';
@@ -54,8 +53,6 @@ export default function DetalleProductoScreen() {
   const handleEliminar = () => {
     if (!producto) return;
     ProductoService.deleteLogical(producto.id);
-    useRefreshStore.getState().bumpProducts();
-    useRefreshStore.getState().bumpDashboard();
     setModalDeleteVisible(false);
     router.replace('/(tabs)/productos');
   };
