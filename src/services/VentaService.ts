@@ -29,24 +29,6 @@ export class VentaService {
       throw new Error(`El cliente seleccionado no existe.`);
     }
 
-    // 2. Pre-validación de stock de todos los productos antes de iniciar la transacción
-    for (const item of input.items) {
-      const prod = db.getFirstSync<Producto>(
-        'SELECT id, nombre, stock, precio_venta, activo FROM Producto WHERE id = ?;',
-        [item.producto_id]
-      );
-
-      if (!prod || prod.activo === 0) {
-        throw new Error(`El producto #${item.producto_id} no se encuentra disponible.`);
-      }
-
-      if (prod.stock < item.cantidad) {
-        throw new Error(
-          `Stock insuficiente para "${prod.nombre}". Solicitado: ${item.cantidad}, Disponible: ${prod.stock}`
-        );
-      }
-    }
-
     let ventaId = 0;
     let subtotalTotal = 0;
 
@@ -58,7 +40,7 @@ export class VentaService {
     const granTotal = subtotalTotal + impuestoTotal;
     const estadoInicial = input.estado || 'pagada';
 
-    // 3. Ejecutar Transacción Atómica en SQLite
+    // 2. Ejecutar Transacción Atómica en SQLite
     db.withTransactionSync(() => {
       // Insertar cabecera de la venta
       const ventaRes = db.runSync(
@@ -68,8 +50,23 @@ export class VentaService {
       );
       ventaId = ventaRes.lastInsertRowId;
 
-      // Insertar cada detalle de venta y descontar stock del producto
+      // Insertar cada detalle de venta, validar stock y descontar inventario dentro de la transacción
       for (const item of input.items) {
+        const prod = db.getFirstSync<Producto>(
+          'SELECT id, nombre, stock, precio_venta, activo FROM Producto WHERE id = ?;',
+          [item.producto_id]
+        );
+
+        if (!prod || prod.activo === 0) {
+          throw new Error(`El producto #${item.producto_id} no se encuentra disponible.`);
+        }
+
+        if (prod.stock < item.cantidad) {
+          throw new Error(
+            `Stock insuficiente para "${prod.nombre}". Solicitado: ${item.cantidad}, Disponible: ${prod.stock}`
+          );
+        }
+
         const itemSubtotal = item.cantidad * item.precio_unitario;
 
         db.runSync(
@@ -269,7 +266,7 @@ export class VentaService {
         COUNT(*) as count, 
         COALESCE(SUM(total), 0) as total 
       FROM Venta 
-      WHERE DATE(fecha) = DATE('now') AND estado = 'pagada';
+      WHERE DATE(fecha, 'localtime') = DATE('now', 'localtime') AND estado = 'pagada';
     `);
 
     // 2. Métricas del mes actual
@@ -278,7 +275,7 @@ export class VentaService {
         COUNT(*) as count, 
         COALESCE(SUM(total), 0) as total 
       FROM Venta 
-      WHERE strftime('%Y-%m', fecha) = strftime('%Y-%m', 'now') AND estado = 'pagada';
+      WHERE strftime('%Y-%m', fecha, 'localtime') = strftime('%Y-%m', 'now', 'localtime') AND estado = 'pagada';
     `);
 
     // 3. Productos con bajo stock

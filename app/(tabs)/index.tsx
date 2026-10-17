@@ -12,6 +12,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useDashboard } from '../../src/hooks/useDashboard';
 import { useTheme } from '../../src/hooks/useTheme';
+import { useRefreshOnFocus } from '../../src/hooks/useRefreshOnFocus';
 import { Header } from '../../src/components/Header';
 import { MetricCard } from '../../src/components/MetricCard';
 import { SaleCard } from '../../src/components/SaleCard';
@@ -24,6 +25,8 @@ export default function DashboardScreen() {
   const router = useRouter();
   const { colors } = useTheme();
   const { metricas, loading, refreshing, refresh } = useDashboard();
+
+  useRefreshOnFocus(refresh);
 
   return (
     <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.background }]} edges={['top']}>

@@ -20,7 +20,7 @@ export function formatNumber(value: number): string {
 export function formatDate(dateString?: string): string {
   if (!dateString) return 'Fecha no disponible';
   try {
-    const date = new Date(dateString.replace(' ', 'T'));
+    const date = new Date(dateString.replace(' ', 'T') + 'Z');
     if (isNaN(date.getTime())) return dateString;
 
     const day = date.getDate().toString().padStart(2, '0');
@@ -44,7 +44,7 @@ export function formatDate(dateString?: string): string {
 export function formatShortDate(dateString?: string): string {
   if (!dateString) return '';
   try {
-    const date = new Date(dateString.replace(' ', 'T'));
+    const date = new Date(dateString.replace(' ', 'T') + 'Z');
     if (isNaN(date.getTime())) return dateString;
 
     const day = date.getDate().toString().padStart(2, '0');

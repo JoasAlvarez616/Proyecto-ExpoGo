@@ -13,6 +13,7 @@ import Animated, { FadeInDown } from 'react-native-reanimated';
 import { Ionicons } from '@expo/vector-icons';
 import { useVentas } from '../../src/hooks/useVentas';
 import { useTheme } from '../../src/hooks/useTheme';
+import { useRefreshOnFocus } from '../../src/hooks/useRefreshOnFocus';
 import { Header } from '../../src/components/Header';
 import { SearchBar } from '../../src/components/SearchBar';
 import { CategoryChip } from '../../src/components/CategoryChip';
@@ -36,6 +37,8 @@ export default function VentasScreen() {
     busqueda,
     setBusqueda,
   } = useVentas();
+
+  useRefreshOnFocus(refresh);
 
   const estados: Array<{ label: string; value: EstadoVenta | 'todas' }> = [
     { label: 'Todas', value: 'todas' },
@@ -105,7 +108,7 @@ export default function VentasScreen() {
               />
             }
             renderItem={({ item, index }) => (
-              <Animated.View entering={FadeInDown.delay(index * 40).springify()}>
+              <Animated.View entering={FadeInDown.delay(Math.min(index * 45, 320)).springify()}>
                 <SaleCard
                   venta={item}
                   onPress={() => router.push(`/venta/${item.id}`)}

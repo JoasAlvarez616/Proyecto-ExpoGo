@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Dimensions, Text, Pressable } from 'react-native';
+import { View, StyleSheet, Text, Pressable } from 'react-native';
 import { GestureDetector, Gesture } from 'react-native-gesture-handler';
 import Animated, {
   useSharedValue,
@@ -12,7 +12,6 @@ import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { BorderRadius, Palette, Spacing, Typography } from '../theme/tokens';
 
-const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const SWIPE_THRESHOLD = -90;
 
 interface SwipeableRowProps {

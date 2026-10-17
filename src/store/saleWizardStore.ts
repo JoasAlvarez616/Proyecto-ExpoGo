@@ -37,7 +37,7 @@ export const useSaleWizardStore = create<SaleWizardState>((set, get) => ({
 
   nextStep: () => {
     const { currentStep } = get();
-    if (currentStep < 4) {
+    if (currentStep < 3) {
       set({ currentStep: currentStep + 1 });
     }
   },
